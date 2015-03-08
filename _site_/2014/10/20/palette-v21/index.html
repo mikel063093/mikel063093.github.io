@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Palette v21 &middot; Chris Banes
+    
+  </title>
+  
+  
+  
+  <meta name="twitter:site" content="@chrisbanes">
+  <meta property="og:type" content="article">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image:src" content="http://chris.banes.me/content/images/2014/11/style-color-colorstory-01_large_mdpi.png">
+  <meta name="og:image" content="http://chris.banes.me/content/images/2014/11/style-color-colorstory-01_large_mdpi.png">
+  
+  
+  
+  <meta property="og:title" content="Palette v21">
+  <meta property="twitter:title" content="Palette v21">
+  
+
+  
+  <meta name="twitter:description" content="Tried the Android Lollipop SDK? You may have noticed that Palette’s API has been updated. As before, Palette allows you to extract colors from images for use in your UI.
+
+">
+  <meta property="og:description" content="Tried the Android Lollipop SDK? You may have noticed that Palette’s API has been updated. As before, Palette allows you to extract colors from images for use in your UI.
+
+">
+  <meta name="description" content="Tried the Android Lollipop SDK? You may have noticed that Palette’s API has been updated. As before, Palette allows you to extract colors from images for use in your UI.
+
+">
+  
+
+  <meta name="theme-color" content="#00796B">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/site.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira+Sans|Fira+Mono|Fjalla+One">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/content/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/content/apple-touch-icon-152x152.png" />
+  <link rel="icon" type="image/png" href="/content/favicon-196x196.png" sizes="196x196" />
+  <link rel="icon" type="image/png" href="/content/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/content/favicon-16x16.png" sizes="16x16" />
+  <meta name="application-name" content="Chris Banes"/>
+  <meta name="msapplication-TileColor" content="#00796B" />
+  <meta name="msapplication-TileImage" content="/content/mstile-144x144.png" />
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+
+      <a href="/" title="Link to homepage for Chris Banes"><img src="/content/images/me.jpg" width="80" alt="Chris Banes logo" class="panel-cover__logo logo" /></a>
+
+      <h1>
+        <a href="/">
+          Chris Banes
+        </a>
+      </h1>
+      <p class="lead">I work as a DPE in the Android Developer Relations team. This is my personal blog and any views expressed here are mine, and not my employers.</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+
+          </nav>
+
+
+      <nav class="sidebar-social">
+  <ul class="navigation">
+
+
+  <!-- Twitter -->
+  <li class="social-item twitter">
+    <a href="https://twitter.com/MikelAlegria" title="Mike alegria on Twitter" target="_blank">
+      <i class='icon fi-social-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  <!-- Google+ -->
+  <!-- <li class="social-item gplus">
+    <a href="http://plus.google.com/103829716466878605055?rel=author" title="+ChrisBanes" target="_blank">
+      <i class='icon fi-social-google-plus'></i>
+      <span class="label">Google+</span>
+    </a>
+  </li> -->
+
+  <!-- GitHub -->
+  <li class="social-item github">
+    <a href="http://github.com/mikel063093" title="@mikel063093 on GitHub" target="_blank">
+      <i class='icon fi-social-github'></i>
+      <span class="label">GitHub</span>
+    </a>
+  </li>
+
+  <!-- StackOverflow -->
+  <!-- <li class="social-item stackoverflow">
+    <a href="http://stackoverflow.com/users/474997/chris-banes" title="Chris Banes on StackOverflow" target="_blank">
+      <i class='icon fi-social-stack-overflow'></i>
+      <span class="label">StackOverflow</span>
+    </a>
+  </li> -->
+
+  <!-- Foursquare -->
+  <!-- <li class="social-item foursquare">
+    <a href="http://foursquare.com/chrisbanes" title="Chris Banes on foursquare" target="_blank">
+      <i class='icon fi-social-foursquare'></i>
+      <span class="label">foursquare</span>
+    </a>
+  </li> -->
+
+    <!-- LinkedIn -->
+    <li class="social-item linkedin">
+      <a href="http://co.linkedin.com/in/mikealegria/" title="Miguel Alegria on LinkedIn" target="_blank">
+        <i class='icon fi-social-linkedin'></i>
+        <span class="label">LinkedIn</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+
+
+
+
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Palette v21</h1>
+  <span class="post-date">20 Oct 2014</span>
+  
+  <img src="/content/images/2014/11/style-color-colorstory-01_large_mdpi.png" alt="Palette v21">
+  
+
+  <p>Tried the Android Lollipop SDK? You may have noticed that Palette’s API has been updated. As before, Palette allows you to extract colors from images for use in your UI.</p>
+
+<h2 id="generating-a-palette">Generating a palette</h2>
+<p>The first step is to generate a Palette instance from a <code>Bitmap</code>. We have four related ways to do this:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// Synchronous methods.</span>
+<span class="c1">// --------------------------------</span>
+<span class="c1">// These should be used when you have access to the underlying image loading thread.</span>
+<span class="c1">// Picasso allows this through a Transformation. For other libraries, YMMV.</span>
+
+<span class="c1">// Uses the default palette size (16).</span>
+<span class="n">Palette</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Palette</span><span class="o">.</span><span class="na">generate</span><span class="o">(</span><span class="n">bitmap</span><span class="o">);</span>
+
+<span class="c1">// Allows you to specify the maximum palette size, in this case 24.</span>
+<span class="n">Palette</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Palette</span><span class="o">.</span><span class="na">generate</span><span class="o">(</span><span class="n">bitmap</span><span class="o">,</span> <span class="mi">24</span><span class="o">);</span>
+
+
+<span class="c1">// Asynchronous methods</span>
+<span class="c1">// --------------------------------</span>
+<span class="c1">// This is the quick and easy integration path. Internally uses an AsyncTask so </span>
+<span class="c1">// this may not be optimal (since you&#39;re dipping in and out of threads)</span>
+
+<span class="c1">// Uses the default palette size (16).</span>
+<span class="n">Palette</span><span class="o">.</span><span class="na">generateAsync</span><span class="o">(</span><span class="n">bitmap</span><span class="o">,</span> <span class="k">new</span> <span class="n">Palette</span><span class="o">.</span><span class="na">PaletteAsyncListener</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onGenerated</span><span class="o">(</span><span class="n">Palette</span> <span class="n">palette</span><span class="o">)</span> <span class="o">{</span>
+       <span class="c1">// Here&#39;s your generated palette</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+
+<span class="c1">// Allows you to specify the maximum palette size, in this case 24.</span>
+<span class="n">Palette</span><span class="o">.</span><span class="na">generateAsync</span><span class="o">(</span><span class="n">bitmap</span><span class="o">,</span> <span class="mi">24</span><span class="o">,</span> <span class="k">new</span> <span class="n">Palette</span><span class="o">.</span><span class="na">PaletteAsyncListener</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onGenerated</span><span class="o">(</span><span class="n">Palette</span> <span class="n">palette</span><span class="o">)</span> <span class="o">{</span>
+       <span class="c1">// Here&#39;s your generated palette</span>
+    <span class="o">}</span>
+<span class="o">});</span></code></pre></div>
+
+<h2 id="using-the-palette">Using the palette</h2>
+
+<p>When a palette is generated, it tries to pick six swatches which match certain criteria:</p>
+
+<ul>
+  <li>Vibrant. <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getVibrantSwatch()">Palette.getVibrantSwatch()</a></li>
+  <li>Vibrant dark. <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getDarkVibrantSwatch()">Palette.getDarkVibrantSwatch()</a></li>
+  <li>Vibrant light. <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getLightVibrantSwatch()">Palette.getLightVibrantSwatch()</a></li>
+  <li>Muted. <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getMutedSwatch()">Palette.getMutedSwatch()</a></li>
+  <li>Muted dark. <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getDarkMutedSwatch()">Palette.getDarkMutedSwatch()</a></li>
+  <li>Muted light. <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getLightMutedSwatch()">Palette.getLightMutedSwatch()</a></li>
+</ul>
+
+<p>Which one you choose depends on your use case. Vibrant and Dark Vibrant are the ones that developers will use mostly though.</p>
+
+<h3 id="using-a-swatch">Using a swatch</h3>
+
+<p>Each <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html">Swatch</a> contains the following methods:</p>
+
+<ul>
+  <li><a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getPopulation()">getPopulation()</a>: the amount of pixels which this swatch represents.</li>
+  <li><a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getRgb()">getRgb()</a>: the RGB value of this color.</li>
+  <li><a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getHsl()">getHsl()</a>: the <a href="http://en.wikipedia.org/wiki/HSL_and_HSV">HSL</a> value of this color.</li>
+  <li><a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getBodyTextColor()">getBodyTextColor()</a>: the RGB value of a text color which can be displayed on top of this color.</li>
+  <li><a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getTitleTextColor()">getTitleTextColor()</a>: the RGB value of a text color which can be displayed on top of this color.</li>
+</ul>
+
+<p>The different text colors roughly match up to the material design <a href="http://www.google.co.uk/design/spec/style/typography.html#typography-standard-styles">standard styles</a> of the same name. The title text color will be more translucent as the text is larger and thus requires less color contrast. The body text color will be more opaque as text is smaller and thus requires more contrast from color.</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">Palette</span><span class="o">.</span><span class="na">Swatch</span> <span class="n">swatch</span> <span class="o">=</span> <span class="n">palette</span><span class="o">.</span><span class="na">getVibrantSwatch</span><span class="o">();</span>
+<span class="n">TextView</span> <span class="n">titleView</span> <span class="o">=</span> <span class="o">...;</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">swatch</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">titleView</span><span class="o">.</span><span class="na">setBackgroundColor</span><span class="o">(</span><span class="n">swatch</span><span class="o">.</span><span class="na">getRgb</span><span class="o">());</span>
+    <span class="n">titleView</span><span class="o">.</span><span class="na">setTextColor</span><span class="o">(</span><span class="n">swatch</span><span class="o">.</span><span class="na">getTitleTextColor</span><span class="o">());</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Please note that if Palette can not find a color which matches the criteria then it will return <code>null</code>. This is why there is a null check above.</p>
+
+<h3 id="custom-color-selection">Custom color selection</h3>
+
+<p>But what if you do not like Palette’s color selections? In this case, you can grab all of the swatches which make up the Palette as so:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">List</span><span class="o">&lt;</span><span class="n">Palette</span><span class="o">.</span><span class="na">Swatch</span><span class="o">&gt;</span> <span class="n">swatches</span> <span class="o">=</span> <span class="n">palette</span><span class="o">.</span><span class="na">getSwatches</span><span class="o">();</span></code></pre></div>
+
+<p>You can then iterate over them and choose whichever color you want.</p>
+
+<h2 id="palette-size">Palette size</h2>
+
+<p>You may have seen above that you can specify the palette size. The higher the number, the longer it takes to generate a palette. The lower the number, the less colors we have to choose from. The best number to use depends on the image type:</p>
+
+<ul>
+  <li>Contact images/avatars: optimal values are 24-32</li>
+  <li>Landscapes: optimal values are 8-16</li>
+</ul>
+
+<p>The default value is 16 which is good compromise and works well in most situations.</p>
+
+<h2 id="done">Done.</h2>
+<p>So there you go. If you have any specific questions on Palette, add a comment below.</p>
+
+</div>
+
+
+<section class="post-comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'chrisbanes'; // required: replace example with your forum shortname
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3 style="display: inline;"><a href="/2014/11/12/theme-vs-style/">Theme vs Style</a></h3>
+        <small>12 Nov 2014</small>
+      </li>
+    
+      <li>
+        <h3 style="display: inline;"><a href="/2014/10/17/appcompat-v21/">appcompat v21: material design for pre-Lollipop devices!</a></h3>
+        <small>17 Oct 2014</small>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+      <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-41899870-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+  </body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      appcompat v21: material design for pre-Lollipop devices! &middot; Chris Banes
+    
+  </title>
+  
+  
+  
+  <meta name="twitter:site" content="@chrisbanes">
+  <meta property="og:type" content="article">
+  
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image:src" content="http://chris.banes.me/content/images/2014/11/materialdesign-goals-swirlanddot_large_xhdpi.png">
+  <meta name="og:image" content="http://chris.banes.me/content/images/2014/11/materialdesign-goals-swirlanddot_large_xhdpi.png">
+  
+  
+  
+  <meta property="og:title" content="appcompat v21: material design for pre-Lollipop devices!">
+  <meta property="twitter:title" content="appcompat v21: material design for pre-Lollipop devices!">
+  
+
+  
+  <meta name="twitter:description" content="The Android 5.0 SDK was released today and among the many tasty updates, includes new UI widgets and theming abilities to create material design style apps.  To enable you to bring your updated designs to older platforms, we have also updated the support libraries including AppCompat. In this post I’ll outline what’s new in AppCompat and how you can use it in your app.
+
+">
+  <meta property="og:description" content="The Android 5.0 SDK was released today and among the many tasty updates, includes new UI widgets and theming abilities to create material design style apps.  To enable you to bring your updated designs to older platforms, we have also updated the support libraries including AppCompat. In this post I’ll outline what’s new in AppCompat and how you can use it in your app.
+
+">
+  <meta name="description" content="The Android 5.0 SDK was released today and among the many tasty updates, includes new UI widgets and theming abilities to create material design style apps.  To enable you to bring your updated designs to older platforms, we have also updated the support libraries including AppCompat. In this post I’ll outline what’s new in AppCompat and how you can use it in your app.
+
+">
+  
+
+  <meta name="theme-color" content="#00796B">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/site.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Fira+Sans|Fira+Mono|Fjalla+One">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/content/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/content/apple-touch-icon-152x152.png" />
+  <link rel="icon" type="image/png" href="/content/favicon-196x196.png" sizes="196x196" />
+  <link rel="icon" type="image/png" href="/content/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/content/favicon-16x16.png" sizes="16x16" />
+  <meta name="application-name" content="Chris Banes"/>
+  <meta name="msapplication-TileColor" content="#00796B" />
+  <meta name="msapplication-TileImage" content="/content/mstile-144x144.png" />
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+
+      <a href="/" title="Link to homepage for Chris Banes"><img src="/content/images/me.jpg" width="80" alt="Chris Banes logo" class="panel-cover__logo logo" /></a>
+
+      <h1>
+        <a href="/">
+          Chris Banes
+        </a>
+      </h1>
+      <p class="lead">I work as a DPE in the Android Developer Relations team. This is my personal blog and any views expressed here are mine, and not my employers.</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+
+          </nav>
+
+
+      <nav class="sidebar-social">
+  <ul class="navigation">
+
+
+  <!-- Twitter -->
+  <li class="social-item twitter">
+    <a href="https://twitter.com/MikelAlegria" title="Mike alegria on Twitter" target="_blank">
+      <i class='icon fi-social-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  <!-- Google+ -->
+  <!-- <li class="social-item gplus">
+    <a href="http://plus.google.com/103829716466878605055?rel=author" title="+ChrisBanes" target="_blank">
+      <i class='icon fi-social-google-plus'></i>
+      <span class="label">Google+</span>
+    </a>
+  </li> -->
+
+  <!-- GitHub -->
+  <li class="social-item github">
+    <a href="http://github.com/mikel063093" title="@mikel063093 on GitHub" target="_blank">
+      <i class='icon fi-social-github'></i>
+      <span class="label">GitHub</span>
+    </a>
+  </li>
+
+  <!-- StackOverflow -->
+  <!-- <li class="social-item stackoverflow">
+    <a href="http://stackoverflow.com/users/474997/chris-banes" title="Chris Banes on StackOverflow" target="_blank">
+      <i class='icon fi-social-stack-overflow'></i>
+      <span class="label">StackOverflow</span>
+    </a>
+  </li> -->
+
+  <!-- Foursquare -->
+  <!-- <li class="social-item foursquare">
+    <a href="http://foursquare.com/chrisbanes" title="Chris Banes on foursquare" target="_blank">
+      <i class='icon fi-social-foursquare'></i>
+      <span class="label">foursquare</span>
+    </a>
+  </li> -->
+
+    <!-- LinkedIn -->
+    <li class="social-item linkedin">
+      <a href="http://co.linkedin.com/in/mikealegria/" title="Miguel Alegria on LinkedIn" target="_blank">
+        <i class='icon fi-social-linkedin'></i>
+        <span class="label">LinkedIn</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+
+
+
+
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">appcompat v21: material design for pre-Lollipop devices!</h1>
+  <span class="post-date">17 Oct 2014</span>
+  
+  <img src="/content/images/2014/11/materialdesign-goals-swirlanddot_large_xhdpi.png" alt="appcompat v21: material design for pre-Lollipop devices!">
+  
+
+  <p>The Android 5.0 SDK was released today and among the many tasty updates, includes new UI widgets and theming abilities to create material design style apps.  To enable you to bring your updated designs to older platforms, we have also updated the support libraries including AppCompat. In this post I’ll outline what’s new in AppCompat and how you can use it in your app.</p>
+
+<p>AppCompat (aka ActionBarCompat) started out as a backport of the Android 4.0 <a href="https://developer.android.com/reference/android/app/ActionBar.html">ActionBar</a> API for devices running on Gingerbread, providing a common API layer on top of the backported implementation and framework implementation.  The new v21 appcompat update provides the API and feature-set that is up to date with Android 5.0.</p>
+
+<p>Android 5.0 introduces a new <a href="https://developer.android.com/reference/android/widget/Toolbar.html">Toolbar</a> widget.  This is a generalization of the ActionBar pattern but gives you <strong>much</strong> more control and flexibility in using it.  Toolbar is a view in your hierarchy just like any other, making it easier to interleave with the rest of your views, animate, react to scroll events.</p>
+
+<p><img src="/content/images/2014/11/layout-structure-toolbars-toolbars-04_large_xhdpi.png" alt="Toolbar" /></p>
+
+<h2 id="setup">Setup</h2>
+
+<p>If you’re using Gradle then the first thing to do is to add appcompat as a dependency in your build.gradle:</p>
+
+<div class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="o">...</span>
+    <span class="n">compile</span> <span class="s2">&quot;com.android.support:appcompat-v7:21.0.+&quot;</span>
+<span class="o">}</span></code></pre></div>
+
+<h3 id="new-integration">New integration</h3>
+
+<p>If you are not currently using AppCompat, or you are starting from scratch, then here’s how to set it up:</p>
+
+<ul>
+  <li>All of your Activities must extend from <a href="https://developer.android.com/reference/android/support/v7/app/ActionBarActivity.html">ActionBarActivity</a>. It extends from <a href="https://developer.android.com/reference/android/support/v4/app/FragmentActivity.html">FragmentActivity</a> from the v4 support library, so you can continue to use fragments.</li>
+  <li>All of your themes (that want an action bar/Toolbar) must inherit from Theme.AppCompat. There are variants available including Light and NoActionBar.</li>
+  <li>When inflating anything to be displayed on the action bar (such as a <a href="https://developer.android.com/reference/android/widget/SpinnerAdapter.html">SpinnerAdapter</a> for list navigation in the action bar), make sure you use the action bar’s themed context retrieved via getSupportActionBar().getThemedContext().</li>
+  <li>You must use the static methods in <a href="https://developer.android.com/reference/android/support/v4/view/MenuItemCompat.html">MenuItemCompat</a> for any action-related calls on a MenuItem.</li>
+</ul>
+
+<p>The <a href="http://developer.android.com/guide/topics/ui/actionbar.html">Action Bar API guide</a> is a comprehensive guide for AppCompat, although it needs to be updated for v21. Just ignore the ‘Example theme’ section at the bottom,  where it mentions that you need to set ‘two version for each action bar style property’.</p>
+
+<h3 id="migration-from-previous-setup">Migration from previous setup</h3>
+
+<p>If you already have an existing AppCompat setup then here’s how to update your theme to take advantage of the new capabilities:</p>
+
+<p>We now use the support implementation of Toolbar/ActionBar on all platforms meaning that we no longer read any <code>android:</code> attributes related to the action bar.</p>
+
+<p>For apps which already have existing appcompat setups, this means that you should remove your v14+ themes which re-set the same values in the android namespace. Please note, this is ONLY applicable for styles/widgets which affect the action bar.</p>
+
+<p>For most apps, you now only need one theme declaration, in <code>values/</code>:</p>
+
+<p><strong>values/themes.xml</strong>:</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&quot;Theme.MyTheme&quot;</span> <span class="na">parent=</span><span class="s">&quot;Theme.AppCompat.Light&quot;</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- Here we setting appcompat’s actionBarStyle --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;actionBarStyle&quot;</span><span class="nt">&gt;</span>@style/MyActionBarStyle<span class="nt">&lt;/item&gt;</span>
+
+    <span class="c">&lt;!-- ...and here we setting appcompat’s color theming attrs --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;colorPrimary&quot;</span><span class="nt">&gt;</span>@color/my_awesome_red<span class="nt">&lt;/item&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;colorPrimaryDark&quot;</span><span class="nt">&gt;</span>@color/my_awesome_darker_red<span class="nt">&lt;/item&gt;</span>
+    
+    <span class="c">&lt;!-- The rest of your attributes --&gt;</span>
+<span class="nt">&lt;/style&gt;</span></code></pre></div>
+
+<h2 id="theming">Theming</h2>
+
+<p>AppCompat has support for the new <a href="http://developer.android.com/training/material/theme.html#ColorPalette">color palette</a> theme attributes which allow you to easily customise your theme to fit your brand with a <a href="http://www.google.com/design/spec/style/color.html#color-ui-color-application">primary and accent colour</a>. Here’s a quick example:</p>
+
+<p><strong>values/themes.xml:</strong></p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&quot;Theme.MyTheme&quot;</span> <span class="na">parent=</span><span class="s">&quot;Theme.AppCompat.Light&quot;</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- colorPrimary is used for the default action bar background --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;colorPrimary&quot;</span><span class="nt">&gt;</span>@color/my_awesome_color<span class="nt">&lt;/item&gt;</span>
+
+    <span class="c">&lt;!-- colorPrimaryDark is used for the status bar --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;colorPrimaryDark&quot;</span><span class="nt">&gt;</span>@color/my_awesome_darker_color<span class="nt">&lt;/item&gt;</span>
+
+    <span class="c">&lt;!-- colorAccent is used as the default value for colorControlActivated</span>
+<span class="c">         which is used to tint widgets --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;colorAccent&quot;</span><span class="nt">&gt;</span>@color/accent<span class="nt">&lt;/item&gt;</span>
+
+    <span class="c">&lt;!-- You can also set colorControlNormal, colorControlActivated</span>
+<span class="c">         colorControlHighlight &amp; colorSwitchThumbNormal. --&gt;</span>
+<span class="nt">&lt;/style&gt;</span></code></pre></div>
+
+<p>By setting these, AppCompat will automatically propagate the values to the framework attributes on API 21+. This automatically colours the status bar and recents task entry.</p>
+
+<p>On older platforms, AppCompat emulates the color theming where possible. At the moment this is limited to coloring the action bar and some widgets.</p>
+
+<h3 id="widget-tinting">Widget Tinting</h3>
+
+<p>When running on an Android 5.0 device, all of the widgets will be tinted using the color theme attributes we just talked about. There are two main features which allow this on Lollipop: drawable tinting, and referencing theme attributes (of the form <code>?attr/foo</code>) in drawables.</p>
+
+<p>AppCompat provides similar behaviour on older devices for a subset of UI widgets:</p>
+
+<ul>
+  <li>Everything provided by AppCompat’s toolbar (action modes, etc)</li>
+  <li>EditText</li>
+  <li>Spinner</li>
+  <li>CheckBox</li>
+  <li>RadioButton</li>
+  <li>Switch (use the new <a href="https://developer.android.com/reference/android/support/v7/widget/SwitchCompat.html">android.support.v7.widget.SwitchCompat</a>)</li>
+  <li>CheckedTextView</li>
+</ul>
+
+<p>You do not need to do anything special to make these work, just use these controls in your  layouts as usual and AppCompat will do the rest (with some caveats; see the FAQ below).</p>
+
+<h2 id="widgets">Widgets</h2>
+
+<h3 id="toolbar">Toolbar</h3>
+
+<p>Firstly, Toolbar is fully supported in AppCompat and has feature and API parity with the framework widget. To use it, you need to use the class <a href="https://developer.android.com/reference/android/support/v7/widget/Toolbar.html">android.support.v7.widget.Toolbar</a>. There are two ways to use Toolbar:</p>
+
+<ul>
+  <li>Use a Toolbar as an action bar when you want to use the existing ActionBar facilities (such as menu inflation and selection, <a href="https://developer.android.com/reference/android/support/v7/app/ActionBarDrawerToggle.html">ActionBarDrawerToggle</a> etc.) but want to have more control over it’s appearance.</li>
+  <li>Use a standalone Toolbar when you want to use the pattern in your app in situations the Action Bar would not support e.g. showing multiple toolbars on the screen, spanning only part of the width etc.</li>
+</ul>
+
+<h4 id="action-bar">Action Bar</h4>
+
+<p>To use Toolbar as an action bar,  the first thing you need to do is disable the decor provided action bar. The easiest way is to have your theme extend from Theme.AppCompat.NoActionBar (or the light variant).</p>
+
+<p>Second, you need to create a Toolbar instance, usually via your layout XML:</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;android.support.v7.widget.Toolbar</span>
+    <span class="na">xmlns:app=</span><span class="s">&quot;http://schemas.android.com/apk/res-auto&quot;</span>
+    <span class="na">android:id=</span><span class="s">&quot;@+id/my_awesome_toolbar&quot;</span>
+    <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
+    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+    <span class="na">android:minHeight=</span><span class="s">&quot;?attr/actionBarSize&quot;</span>
+    <span class="na">android:background=</span><span class="s">&quot;?attr/colorPrimary&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+
+<p>The height, width, background, etc are totally up to you, these are just good examples. As Toolbar is just a ViewGroup, you can style and position it however you want.</p>
+
+<p>Then in your Activity or Fragment, you set the Toolbar to act as your action bar:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+    <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">my_layout</span><span class="o">);</span>
+
+    <span class="n">Toolbar</span> <span class="n">toolbar</span> <span class="o">=</span> <span class="o">(</span><span class="n">Toolbar</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">my_awesome_toolbar</span><span class="o">);</span>
+    <span class="n">setSupportActionBar</span><span class="o">(</span><span class="n">toolbar</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
+
+<p>From that point on, all menu items will be displayed in your Toolbar, populated via the standard options menu callbacks.</p>
+
+<h4 id="standalone">Standalone</h4>
+
+<p>Very similar to above, but in this mode you do <strong>not</strong> set the Toolbar to act as your action bar. For this reason, you can use any AppCompat theme and you do not need to disable the decor-provided action bar.</p>
+
+<p>When used by itself, you need to populate the Toolbar with content/actions manually. For instance, if you want it to display actions, you need to inflate a menu into it:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+    <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">my_layout</span><span class="o">);</span>
+
+    <span class="n">Toolbar</span> <span class="n">toolbar</span> <span class="o">=</span> <span class="o">(</span><span class="n">Toolbar</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">my_awesome_toolbar</span><span class="o">);</span>
+
+    <span class="c1">// Set an OnMenuItemClickListener to handle menu item clicks</span>
+    <span class="n">toolbar</span><span class="o">.</span><span class="na">setOnMenuItemClickListener</span><span class="o">(</span>
+            <span class="k">new</span> <span class="n">Toolbar</span><span class="o">.</span><span class="na">OnMenuItemClickListener</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onMenuItemClick</span><span class="o">(</span><span class="n">MenuItem</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// Handle the menu item</span>
+                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+                <span class="o">}</span>
+    <span class="o">});</span>
+
+    <span class="c1">// Inflate a menu to be displayed in the toolbar</span>
+    <span class="n">toolbar</span><span class="o">.</span><span class="na">inflateMenu</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">menu</span><span class="o">.</span><span class="na">your_toolbar_menu</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
+
+<p>There are a number of other things you can do with Toolbar. See the Toolbar <a href="https://developer.android.com/reference/android/support/v7/widget/Toolbar.html">javadoc</a> for more information.</p>
+
+<h4 id="styling">Styling</h4>
+
+<p>Styling of Toolbar is done differently to the standard action bar, and is set directly onto the view.</p>
+
+<p>Here’s a basic style you should be using when you’re using a Toolbar as your action bar:</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;android.support.v7.widget.Toolbar</span>
+    <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
+    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+    <span class="na">android:minHeight=</span><span class="s">&quot;?attr/actionBarSize&quot;</span>
+    <span class="na">app:theme=</span><span class="s">&quot;@style/ThemeOverlay.AppCompat.ActionBar&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+
+<p>The <code>app:theme</code> declaration will make sure that your text and items are using solid colors (i.e 100% opacity white).</p>
+
+<h5 id="darkactionbar">DarkActionBar</h5>
+
+<p>A common question I was asked during development was how to achieve a Toolbar which looks like ‘DarkActionBar’ (dark content, light overflow menu). This is achieved by providing the <code>theme</code> and <code>popupTheme</code> attributes:</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;android.support.v7.widget.Toolbar</span>
+    <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
+    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+    <span class="na">android:minHeight=</span><span class="s">&quot;@dimen/triple_height_toolbar&quot;</span>
+    <span class="na">app:theme=</span><span class="s">&quot;@style/ThemeOverlay.AppCompat.Dark.ActionBar&quot;</span>
+    <span class="na">app:popupTheme=</span><span class="s">&quot;@style/ThemeOverlay.AppCompat.Light&quot;</span> <span class="nt">/&gt;</span></code></pre></div>
+
+<p>Obviously the background, height, etc can be anything you want, the above are just suggestions.</p>
+
+<h3 id="searchview">SearchView</h3>
+
+<p>AppCompat offer’s Lollipop’s updated SearchView API with is far more customizable and styleable (queue the applause).  Due to this, we are now using the L style structure instead of the old <code>searchView*</code> theme attributes.</p>
+
+<p>So here is how you style SearchView:</p>
+
+<p><strong>values/themes.xml:</strong></p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&quot;Theme.MyTheme&quot;</span> <span class="na">parent=</span><span class="s">&quot;Theme.AppCompat&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;searchViewStyle&quot;</span><span class="nt">&gt;</span>@style/MySearchViewStyle<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span>
+
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&quot;MySearchViewStyle&quot;</span> <span class="na">parent=</span><span class="s">&quot;Widget.AppCompat.SearchView&quot;</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- The layout for the search view. Be careful. --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;layout&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Background for the search query section (e.g. EditText) --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;queryBackground&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Background for the actions section (e.g. voice, submit) --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;submitBackground&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Close button icon --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;closeIcon&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Search button icon --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;searchIcon&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Go/commit button icon --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;goIcon&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Voice search button icon --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;voiceIcon&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Commit icon shown in the query suggestion row --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;commitIcon&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+    <span class="c">&lt;!-- Layout for query suggestion rows --&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&quot;suggestionRowLayout&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span></code></pre></div>
+
+<p>Obviously you do not need to set all (or any) of these, the defaults will work for the majority of apps.</p>
+
+<h2 id="toolbar-is-coming">Toolbar is coming</h2>
+<p><img src="/content/images/meme-brace-toolbar.jpg" alt="" /></p>
+
+<p>Hopefully this post will help you get up and running with AppCompat and let you create some awesome, material apps.  Let me know in the comments/<a href="https://plus.google.com/u/0/+ChrisBanes/posts/L4Y9TDndifL">G+</a>/<a href="https://twitter.com/chrisbanes/status/523158184283078657">Twitter</a> if you’re having trouble with AppCompat or any of the support libraries, or where we could provide more documentation.</p>
+
+<hr />
+
+<h2 id="faq">FAQ</h2>
+
+<p><strong>Why is my EditText (or other widget listed above) not being tinted correctly on my pre-Lollipop device?</strong></p>
+
+<p>The widget tinting in appcompat works by intercepting any layout inflation and inserting a special tint-aware version of the widget in its place. For most people this will work fine but I can think of a few scenarios where this won’t work including:</p>
+
+<ul>
+  <li>You have your own custom version of the widget (i.e. you’ve extended EditText)</li>
+  <li>You are creating the EditText without a LayoutInflater (i.e. calling new EditText()).</li>
+  <li>You are hooking up to the <a href="https://developer.android.com/reference/android/view/LayoutInflater.html">LayoutInflater</a>’s <a href="https://developer.android.com/reference/android/view/LayoutInflater.Factory.html">Factory</a>.</li>
+</ul>
+
+<p>The special tint aware widgets are currently hidden because they’re an unfinished implementation detail.</p>
+
+
+</div>
+
+
+<section class="post-comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'chrisbanes'; // required: replace example with your forum shortname
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3 style="display: inline;"><a href="/2014/11/12/theme-vs-style/">Theme vs Style</a></h3>
+        <small>12 Nov 2014</small>
+      </li>
+    
+      <li>
+        <h3 style="display: inline;"><a href="/2014/10/20/palette-v21/">Palette v21</a></h3>
+        <small>20 Oct 2014</small>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+      <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-41899870-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+  </body>
+</html>

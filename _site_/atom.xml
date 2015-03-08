@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Chris Banes</title>
+ <link href="http://chris.banes.me/atom.xml" rel="self"/>
+ <link href="http://chris.banes.me/"/>
+ <updated>2015-03-08T12:25:31-05:00</updated>
+ <id>http://chris.banes.me</id>
+ <author>
+   <name>Chris Banes</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Theme vs Style</title>
+   <link href="http://chris.banes.me/2014/11/12/theme-vs-style/"/>
+   <updated>2014-11-12T16:28:02-05:00</updated>
+   <id>http://chris.banes.me/2014/11/12/theme-vs-style</id>
+   <content type="html">&lt;p&gt;Android 5.0 Lollipop brings with it new functionality which allows you to specify an override theme for a View (and any descendents). Let’s have a look at how and why you would use it.&lt;/p&gt;
+
+&lt;h2 id=&quot;why&quot;&gt;Why?&lt;/h2&gt;
+
+&lt;p&gt;You’ve probably already been using this functionality for a while without knowing: &lt;code&gt;Theme.Holo.Light.DarkActionBar&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Think about the Light.DarkActionBar theme for a second. It’s a light theme for your content (background is light and the foreground is dark), but the action bar use a dark theme (dark background with light foreground color).&lt;/p&gt;
+
+&lt;p&gt;Without being able to supply a seperate theme, you would need to manually set the text color and other foreground colors to some sort of inverse. Eugh.&lt;/p&gt;
+
+&lt;p&gt;That is where the old &lt;code&gt;actionBarWidgetTheme&lt;/code&gt; attribute came in, it allowed you to specify a theme to be used &lt;strong&gt;only&lt;/strong&gt; for your action bar. Here’s an excerpt from the platform DarkActionBar theme:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.Holo.Light.DarkActionBar&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android:actionBarWidgetTheme&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@android:style/Theme.Holo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Thus making your action bar using the dark theme.&lt;/p&gt;
+
+&lt;h3 id=&quot;underlying-functionality&quot;&gt;Underlying functionality&lt;/h3&gt;
+
+&lt;p&gt;So how do this work under-the-covers? Simple, it’s the &lt;a href=&quot;https://developer.android.com/reference/android/view/ContextThemeWrapper.html&quot;&gt;ContextThemeWrapper&lt;/a&gt; class which has been available since API v1. It’s a pretty simple class and the clue to what it does is in the name:&lt;/p&gt;
+
+&lt;p&gt;It wraps an existing Context (say your Activity), and then  &lt;strong&gt;overlays&lt;/strong&gt; a new theme on top of that Context’s theme. This is important to understand as this leads on to…&lt;/p&gt;
+
+&lt;h2 id=&quot;themeoverlay&quot;&gt;ThemeOverlay&lt;/h2&gt;
+
+&lt;p&gt;You may have seen these themes in the Lollipop SDK. There are two main overlays:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ThemeOverlay.Material.Light&lt;/li&gt;
+  &lt;li&gt;ThemeOverlay.Material.Dark&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So what exactly are these? Well again, the clue is in the name, and they are directly match to how ContextThemeWrapper works.&lt;/p&gt;
+
+&lt;p&gt;They are special themes which overlay the normal &lt;code&gt;Theme.Material&lt;/code&gt; themes, overwriting relevant attributes to make them either light/dark.&lt;/p&gt;
+
+&lt;h3 id=&quot;themeoverlay--actionbar&quot;&gt;ThemeOverlay + ActionBar&lt;/h3&gt;
+
+&lt;p&gt;The keen eyed of you will also have seen the ActionBar ThemeOverlay derivatives:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ThemeOverlay.Material.Light.ActionBar&lt;/li&gt;
+  &lt;li&gt;ThemeOverlay.Material.Dark.ActionBar&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These should only be used with the Action Bar via the new &lt;code&gt;actionBarTheme&lt;/code&gt; attribute, or directly set on your &lt;a href=&quot;https://developer.android.com/reference/android/widget/Toolbar.html&quot;&gt;Toolbar&lt;/a&gt; (see below).&lt;/p&gt;
+
+&lt;p&gt;The only things these currently do differently to their parents is that they change the &lt;code&gt;colorControlNormal&lt;/code&gt; to be &lt;code&gt;android:textColorPrimary&lt;/code&gt;, thus making any text and icons opaque.&lt;/p&gt;
+
+&lt;h2 id=&quot;androidtheme&quot;&gt;android:theme&lt;/h2&gt;
+
+&lt;p&gt;Let’s get back to the new Lollipop functionality. As mentioned you can now specify a theme directly onto a View in your layout.  The most common use of this will (probably) be using Toolbar:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;Toolbar&lt;/span&gt;  
+    &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;?android:attr/actionBarSize&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;match_parent&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:background=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;?android:attr/colorPrimaryDark&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@android:style/ThemeOverlay.Material.Dark.ActionBar&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Hopefully you can now see how it all comes together. We have now made the Toolbar have a dark theme, ensuring that it’s content is light in color and has contrast againt the dark background.&lt;/p&gt;
+
+&lt;p&gt;One thing to note is that &lt;code&gt;android:theme&lt;/code&gt; in Lollipop propogates to all children declared in the layout:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;LinearLayout&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@android:style/ThemeOverlay.Material.Dark&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Anything here will also have a dark theme --&amp;gt;&lt;/span&gt;
+    
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/LinearLayout&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Your children can set their own theme if needed.&lt;/p&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;Let’s wrap this up with a question that I’ve been asked recently:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;How do I set android:colorEdgeEffect so that it only takes effect on a single view?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;colorEdgeEffect&lt;/code&gt; attribute is a new theme attribute in Android 5.0, which is used to customize the color of the overscroll effect for lists, etc.&lt;/p&gt;
+
+&lt;p&gt;As this is a theme attribute you can not just set it directly on the view. Instead we need to use &lt;code&gt;android:theme&lt;/code&gt; with a custom ThemeOverlay. Our custom overlay just sets &lt;code&gt;android:colorEdgeEffect&lt;/code&gt; to be red. We then set this theme on to the view so that it takes effect.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;res/values/themes.xml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;RedThemeOverlay&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;parent=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android:ThemeOverlay.Material&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android:colorEdgeEffect&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;#FF0000&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;res/layout/fragment_list.xml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;ListView&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;RedThemeOverlay&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Just to note, colorEdgeEffect was just an example here, this technique can be used with &lt;strong&gt;all&lt;/strong&gt; theme attributes.&lt;/p&gt;
+
+&lt;h2 id=&quot;theme-vs-style&quot;&gt;Theme vs Style&lt;/h2&gt;
+
+&lt;p&gt;So what exactly is the difference? Well they are both declared in exactly the same way (which you already know), the difference comes in how they’re used.&lt;/p&gt;
+
+&lt;p&gt;Themes are meant to be the global source of styling for your app. The new functionality doesn’t change that, it just allows you to tweak it per view.&lt;/p&gt;
+
+&lt;p&gt;Styles are meant to be applied at a view level. Internally, when you set &lt;code&gt;style&lt;/code&gt; on a View, the LayoutInflater will read the style and apply it to the &lt;a href=&quot;https://developer.android.com/reference/android/util/AttributeSet.html&quot;&gt;AttributeSet&lt;/a&gt; before any explicit attributes (this allows you to override style values on a view).&lt;/p&gt;
+
+&lt;p&gt;Values in an attribute set can reference values from the View’s theme.&lt;/p&gt;
+
+&lt;p&gt;TL;DR: Themes are global, styles are local.&lt;/p&gt;
+
+&lt;h2 id=&quot;appcompat&quot;&gt;AppCompat&lt;/h2&gt;
+
+&lt;p&gt;So how does AppCompat fit into this? Well it obviously backports some of the new color theme attributes.&lt;/p&gt;
+
+&lt;p&gt;It also backports the &lt;code&gt;android:theme&lt;/code&gt; functionality for certain widgets, currently &lt;strong&gt;only&lt;/strong&gt; &lt;code&gt;android.support.v7.widget.Toolbar&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;See my &lt;a href=&quot;https://chris.banes.me/2014/10/17/appcompat-v21/&quot;&gt;AppCompat v21&lt;/a&gt; blog post for more information.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Palette v21</title>
+   <link href="http://chris.banes.me/2014/10/20/palette-v21/"/>
+   <updated>2014-10-20T16:04:27-05:00</updated>
+   <id>http://chris.banes.me/2014/10/20/palette-v21</id>
+   <content type="html">&lt;p&gt;Tried the Android Lollipop SDK? You may have noticed that Palette’s API has been updated. As before, Palette allows you to extract colors from images for use in your UI.&lt;/p&gt;
+
+&lt;h2 id=&quot;generating-a-palette&quot;&gt;Generating a palette&lt;/h2&gt;
+&lt;p&gt;The first step is to generate a Palette instance from a &lt;code&gt;Bitmap&lt;/code&gt;. We have four related ways to do this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Synchronous methods.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// --------------------------------&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// These should be used when you have access to the underlying image loading thread.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Picasso allows this through a Transformation. For other libraries, YMMV.&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Uses the default palette size (16).&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitmap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Allows you to specify the maximum palette size, in this case 24.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;generate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitmap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+
+&lt;span class=&quot;c1&quot;&gt;// Asynchronous methods&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// --------------------------------&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// This is the quick and easy integration path. Internally uses an AsyncTask so &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// this may not be optimal (since you&amp;#39;re dipping in and out of threads)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Uses the default palette size (16).&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;generateAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitmap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;PaletteAsyncListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onGenerated&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;c1&quot;&gt;// Here&amp;#39;s your generated palette&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Allows you to specify the maximum palette size, in this case 24.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;generateAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bitmap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;PaletteAsyncListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onGenerated&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;c1&quot;&gt;// Here&amp;#39;s your generated palette&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;using-the-palette&quot;&gt;Using the palette&lt;/h2&gt;
+
+&lt;p&gt;When a palette is generated, it tries to pick six swatches which match certain criteria:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Vibrant. &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getVibrantSwatch()&quot;&gt;Palette.getVibrantSwatch()&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Vibrant dark. &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getDarkVibrantSwatch()&quot;&gt;Palette.getDarkVibrantSwatch()&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Vibrant light. &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getLightVibrantSwatch()&quot;&gt;Palette.getLightVibrantSwatch()&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Muted. &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getMutedSwatch()&quot;&gt;Palette.getMutedSwatch()&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Muted dark. &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getDarkMutedSwatch()&quot;&gt;Palette.getDarkMutedSwatch()&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Muted light. &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.html#getLightMutedSwatch()&quot;&gt;Palette.getLightMutedSwatch()&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Which one you choose depends on your use case. Vibrant and Dark Vibrant are the ones that developers will use mostly though.&lt;/p&gt;
+
+&lt;h3 id=&quot;using-a-swatch&quot;&gt;Using a swatch&lt;/h3&gt;
+
+&lt;p&gt;Each &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html&quot;&gt;Swatch&lt;/a&gt; contains the following methods:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getPopulation()&quot;&gt;getPopulation()&lt;/a&gt;: the amount of pixels which this swatch represents.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getRgb()&quot;&gt;getRgb()&lt;/a&gt;: the RGB value of this color.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getHsl()&quot;&gt;getHsl()&lt;/a&gt;: the &lt;a href=&quot;http://en.wikipedia.org/wiki/HSL_and_HSV&quot;&gt;HSL&lt;/a&gt; value of this color.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getBodyTextColor()&quot;&gt;getBodyTextColor()&lt;/a&gt;: the RGB value of a text color which can be displayed on top of this color.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.android.com/reference/android/support/v7/graphics/Palette.Swatch.html#getTitleTextColor()&quot;&gt;getTitleTextColor()&lt;/a&gt;: the RGB value of a text color which can be displayed on top of this color.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The different text colors roughly match up to the material design &lt;a href=&quot;http://www.google.co.uk/design/spec/style/typography.html#typography-standard-styles&quot;&gt;standard styles&lt;/a&gt; of the same name. The title text color will be more translucent as the text is larger and thus requires less color contrast. The body text color will be more opaque as text is smaller and thus requires more contrast from color.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Swatch&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;swatch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getVibrantSwatch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;TextView&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;titleView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;swatch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;titleView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setBackgroundColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;swatch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getRgb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;titleView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setTextColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;swatch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getTitleTextColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Please note that if Palette can not find a color which matches the criteria then it will return &lt;code&gt;null&lt;/code&gt;. This is why there is a null check above.&lt;/p&gt;
+
+&lt;h3 id=&quot;custom-color-selection&quot;&gt;Custom color selection&lt;/h3&gt;
+
+&lt;p&gt;But what if you do not like Palette’s color selections? In this case, you can grab all of the swatches which make up the Palette as so:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Swatch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;swatches&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;palette&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getSwatches&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You can then iterate over them and choose whichever color you want.&lt;/p&gt;
+
+&lt;h2 id=&quot;palette-size&quot;&gt;Palette size&lt;/h2&gt;
+
+&lt;p&gt;You may have seen above that you can specify the palette size. The higher the number, the longer it takes to generate a palette. The lower the number, the less colors we have to choose from. The best number to use depends on the image type:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Contact images/avatars: optimal values are 24-32&lt;/li&gt;
+  &lt;li&gt;Landscapes: optimal values are 8-16&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The default value is 16 which is good compromise and works well in most situations.&lt;/p&gt;
+
+&lt;h2 id=&quot;done&quot;&gt;Done.&lt;/h2&gt;
+&lt;p&gt;So there you go. If you have any specific questions on Palette, add a comment below.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>appcompat v21: material design for pre-Lollipop devices!</title>
+   <link href="http://chris.banes.me/2014/10/17/appcompat-v21/"/>
+   <updated>2014-10-17T12:07:54-05:00</updated>
+   <id>http://chris.banes.me/2014/10/17/appcompat-v21</id>
+   <content type="html">&lt;p&gt;The Android 5.0 SDK was released today and among the many tasty updates, includes new UI widgets and theming abilities to create material design style apps.  To enable you to bring your updated designs to older platforms, we have also updated the support libraries including AppCompat. In this post I’ll outline what’s new in AppCompat and how you can use it in your app.&lt;/p&gt;
+
+&lt;p&gt;AppCompat (aka ActionBarCompat) started out as a backport of the Android 4.0 &lt;a href=&quot;https://developer.android.com/reference/android/app/ActionBar.html&quot;&gt;ActionBar&lt;/a&gt; API for devices running on Gingerbread, providing a common API layer on top of the backported implementation and framework implementation.  The new v21 appcompat update provides the API and feature-set that is up to date with Android 5.0.&lt;/p&gt;
+
+&lt;p&gt;Android 5.0 introduces a new &lt;a href=&quot;https://developer.android.com/reference/android/widget/Toolbar.html&quot;&gt;Toolbar&lt;/a&gt; widget.  This is a generalization of the ActionBar pattern but gives you &lt;strong&gt;much&lt;/strong&gt; more control and flexibility in using it.  Toolbar is a view in your hierarchy just like any other, making it easier to interleave with the rest of your views, animate, react to scroll events.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2014/11/layout-structure-toolbars-toolbars-04_large_xhdpi.png&quot; alt=&quot;Toolbar&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;setup&quot;&gt;Setup&lt;/h2&gt;
+
+&lt;p&gt;If you’re using Gradle then the first thing to do is to add appcompat as a dependency in your build.gradle:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;com.android.support:appcompat-v7:21.0.+&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;new-integration&quot;&gt;New integration&lt;/h3&gt;
+
+&lt;p&gt;If you are not currently using AppCompat, or you are starting from scratch, then here’s how to set it up:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;All of your Activities must extend from &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/app/ActionBarActivity.html&quot;&gt;ActionBarActivity&lt;/a&gt;. It extends from &lt;a href=&quot;https://developer.android.com/reference/android/support/v4/app/FragmentActivity.html&quot;&gt;FragmentActivity&lt;/a&gt; from the v4 support library, so you can continue to use fragments.&lt;/li&gt;
+  &lt;li&gt;All of your themes (that want an action bar/Toolbar) must inherit from Theme.AppCompat. There are variants available including Light and NoActionBar.&lt;/li&gt;
+  &lt;li&gt;When inflating anything to be displayed on the action bar (such as a &lt;a href=&quot;https://developer.android.com/reference/android/widget/SpinnerAdapter.html&quot;&gt;SpinnerAdapter&lt;/a&gt; for list navigation in the action bar), make sure you use the action bar’s themed context retrieved via getSupportActionBar().getThemedContext().&lt;/li&gt;
+  &lt;li&gt;You must use the static methods in &lt;a href=&quot;https://developer.android.com/reference/android/support/v4/view/MenuItemCompat.html&quot;&gt;MenuItemCompat&lt;/a&gt; for any action-related calls on a MenuItem.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;a href=&quot;http://developer.android.com/guide/topics/ui/actionbar.html&quot;&gt;Action Bar API guide&lt;/a&gt; is a comprehensive guide for AppCompat, although it needs to be updated for v21. Just ignore the ‘Example theme’ section at the bottom,  where it mentions that you need to set ‘two version for each action bar style property’.&lt;/p&gt;
+
+&lt;h3 id=&quot;migration-from-previous-setup&quot;&gt;Migration from previous setup&lt;/h3&gt;
+
+&lt;p&gt;If you already have an existing AppCompat setup then here’s how to update your theme to take advantage of the new capabilities:&lt;/p&gt;
+
+&lt;p&gt;We now use the support implementation of Toolbar/ActionBar on all platforms meaning that we no longer read any &lt;code&gt;android:&lt;/code&gt; attributes related to the action bar.&lt;/p&gt;
+
+&lt;p&gt;For apps which already have existing appcompat setups, this means that you should remove your v14+ themes which re-set the same values in the android namespace. Please note, this is ONLY applicable for styles/widgets which affect the action bar.&lt;/p&gt;
+
+&lt;p&gt;For most apps, you now only need one theme declaration, in &lt;code&gt;values/&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;values/themes.xml&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.MyTheme&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;parent=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.AppCompat.Light&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Here we setting appcompat’s actionBarStyle --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;actionBarStyle&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@style/MyActionBarStyle&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- ...and here we setting appcompat’s color theming attrs --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;colorPrimary&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@color/my_awesome_red&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;colorPrimaryDark&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@color/my_awesome_darker_red&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- The rest of your attributes --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;theming&quot;&gt;Theming&lt;/h2&gt;
+
+&lt;p&gt;AppCompat has support for the new &lt;a href=&quot;http://developer.android.com/training/material/theme.html#ColorPalette&quot;&gt;color palette&lt;/a&gt; theme attributes which allow you to easily customise your theme to fit your brand with a &lt;a href=&quot;http://www.google.com/design/spec/style/color.html#color-ui-color-application&quot;&gt;primary and accent colour&lt;/a&gt;. Here’s a quick example:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;values/themes.xml:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.MyTheme&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;parent=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.AppCompat.Light&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- colorPrimary is used for the default action bar background --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;colorPrimary&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@color/my_awesome_color&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- colorPrimaryDark is used for the status bar --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;colorPrimaryDark&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@color/my_awesome_darker_color&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- colorAccent is used as the default value for colorControlActivated&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;         which is used to tint widgets --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;colorAccent&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@color/accent&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- You can also set colorControlNormal, colorControlActivated&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;         colorControlHighlight &amp;amp; colorSwitchThumbNormal. --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;By setting these, AppCompat will automatically propagate the values to the framework attributes on API 21+. This automatically colours the status bar and recents task entry.&lt;/p&gt;
+
+&lt;p&gt;On older platforms, AppCompat emulates the color theming where possible. At the moment this is limited to coloring the action bar and some widgets.&lt;/p&gt;
+
+&lt;h3 id=&quot;widget-tinting&quot;&gt;Widget Tinting&lt;/h3&gt;
+
+&lt;p&gt;When running on an Android 5.0 device, all of the widgets will be tinted using the color theme attributes we just talked about. There are two main features which allow this on Lollipop: drawable tinting, and referencing theme attributes (of the form &lt;code&gt;?attr/foo&lt;/code&gt;) in drawables.&lt;/p&gt;
+
+&lt;p&gt;AppCompat provides similar behaviour on older devices for a subset of UI widgets:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Everything provided by AppCompat’s toolbar (action modes, etc)&lt;/li&gt;
+  &lt;li&gt;EditText&lt;/li&gt;
+  &lt;li&gt;Spinner&lt;/li&gt;
+  &lt;li&gt;CheckBox&lt;/li&gt;
+  &lt;li&gt;RadioButton&lt;/li&gt;
+  &lt;li&gt;Switch (use the new &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/widget/SwitchCompat.html&quot;&gt;android.support.v7.widget.SwitchCompat&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;CheckedTextView&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You do not need to do anything special to make these work, just use these controls in your  layouts as usual and AppCompat will do the rest (with some caveats; see the FAQ below).&lt;/p&gt;
+
+&lt;h2 id=&quot;widgets&quot;&gt;Widgets&lt;/h2&gt;
+
+&lt;h3 id=&quot;toolbar&quot;&gt;Toolbar&lt;/h3&gt;
+
+&lt;p&gt;Firstly, Toolbar is fully supported in AppCompat and has feature and API parity with the framework widget. To use it, you need to use the class &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/widget/Toolbar.html&quot;&gt;android.support.v7.widget.Toolbar&lt;/a&gt;. There are two ways to use Toolbar:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Use a Toolbar as an action bar when you want to use the existing ActionBar facilities (such as menu inflation and selection, &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/app/ActionBarDrawerToggle.html&quot;&gt;ActionBarDrawerToggle&lt;/a&gt; etc.) but want to have more control over it’s appearance.&lt;/li&gt;
+  &lt;li&gt;Use a standalone Toolbar when you want to use the pattern in your app in situations the Action Bar would not support e.g. showing multiple toolbars on the screen, spanning only part of the width etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;action-bar&quot;&gt;Action Bar&lt;/h4&gt;
+
+&lt;p&gt;To use Toolbar as an action bar,  the first thing you need to do is disable the decor provided action bar. The easiest way is to have your theme extend from Theme.AppCompat.NoActionBar (or the light variant).&lt;/p&gt;
+
+&lt;p&gt;Second, you need to create a Toolbar instance, usually via your layout XML:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;android.support.v7.widget.Toolbar&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;xmlns:app=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://schemas.android.com/apk/res-auto&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@+id/my_awesome_toolbar&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;match_parent&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:minHeight=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;?attr/actionBarSize&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:background=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;?attr/colorPrimary&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The height, width, background, etc are totally up to you, these are just good examples. As Toolbar is just a ViewGroup, you can style and position it however you want.&lt;/p&gt;
+
+&lt;p&gt;Then in your Activity or Fragment, you set the Toolbar to act as your action bar:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onCreate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Bundle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;savedInstanceState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onCreate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;savedInstanceState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;setContentView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;my_layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;Toolbar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toolbar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;findViewById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;my_awesome_toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;setSupportActionBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;From that point on, all menu items will be displayed in your Toolbar, populated via the standard options menu callbacks.&lt;/p&gt;
+
+&lt;h4 id=&quot;standalone&quot;&gt;Standalone&lt;/h4&gt;
+
+&lt;p&gt;Very similar to above, but in this mode you do &lt;strong&gt;not&lt;/strong&gt; set the Toolbar to act as your action bar. For this reason, you can use any AppCompat theme and you do not need to disable the decor-provided action bar.&lt;/p&gt;
+
+&lt;p&gt;When used by itself, you need to populate the Toolbar with content/actions manually. For instance, if you want it to display actions, you need to inflate a menu into it:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onCreate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Bundle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;savedInstanceState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onCreate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;savedInstanceState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;setContentView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;my_layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;Toolbar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toolbar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;findViewById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;my_awesome_toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Set an OnMenuItemClickListener to handle menu item clicks&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setOnMenuItemClickListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;OnMenuItemClickListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+                &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onMenuItemClick&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MenuItem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;c1&quot;&gt;// Handle the menu item&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Inflate a menu to be displayed in the toolbar&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;toolbar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;inflateMenu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;menu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;your_toolbar_menu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;There are a number of other things you can do with Toolbar. See the Toolbar &lt;a href=&quot;https://developer.android.com/reference/android/support/v7/widget/Toolbar.html&quot;&gt;javadoc&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;h4 id=&quot;styling&quot;&gt;Styling&lt;/h4&gt;
+
+&lt;p&gt;Styling of Toolbar is done differently to the standard action bar, and is set directly onto the view.&lt;/p&gt;
+
+&lt;p&gt;Here’s a basic style you should be using when you’re using a Toolbar as your action bar:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;android.support.v7.widget.Toolbar&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;match_parent&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:minHeight=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;?attr/actionBarSize&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@style/ThemeOverlay.AppCompat.ActionBar&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;app:theme&lt;/code&gt; declaration will make sure that your text and items are using solid colors (i.e 100% opacity white).&lt;/p&gt;
+
+&lt;h5 id=&quot;darkactionbar&quot;&gt;DarkActionBar&lt;/h5&gt;
+
+&lt;p&gt;A common question I was asked during development was how to achieve a Toolbar which looks like ‘DarkActionBar’ (dark content, light overflow menu). This is achieved by providing the &lt;code&gt;theme&lt;/code&gt; and &lt;code&gt;popupTheme&lt;/code&gt; attributes:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;android.support.v7.widget.Toolbar&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;match_parent&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:minHeight=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@dimen/triple_height_toolbar&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@style/ThemeOverlay.AppCompat.Dark.ActionBar&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app:popupTheme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@style/ThemeOverlay.AppCompat.Light&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Obviously the background, height, etc can be anything you want, the above are just suggestions.&lt;/p&gt;
+
+&lt;h3 id=&quot;searchview&quot;&gt;SearchView&lt;/h3&gt;
+
+&lt;p&gt;AppCompat offer’s Lollipop’s updated SearchView API with is far more customizable and styleable (queue the applause).  Due to this, we are now using the L style structure instead of the old &lt;code&gt;searchView*&lt;/code&gt; theme attributes.&lt;/p&gt;
+
+&lt;p&gt;So here is how you style SearchView:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;values/themes.xml:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.MyTheme&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;parent=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.AppCompat&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;searchViewStyle&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@style/MySearchViewStyle&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;MySearchViewStyle&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;parent=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Widget.AppCompat.SearchView&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- The layout for the search view. Be careful. --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;layout&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Background for the search query section (e.g. EditText) --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;queryBackground&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Background for the actions section (e.g. voice, submit) --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;submitBackground&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Close button icon --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;closeIcon&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Search button icon --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;searchIcon&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Go/commit button icon --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;goIcon&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Voice search button icon --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;voiceIcon&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Commit icon shown in the query suggestion row --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;commitIcon&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Layout for query suggestion rows --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;suggestionRowLayout&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Obviously you do not need to set all (or any) of these, the defaults will work for the majority of apps.&lt;/p&gt;
+
+&lt;h2 id=&quot;toolbar-is-coming&quot;&gt;Toolbar is coming&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/content/images/meme-brace-toolbar.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Hopefully this post will help you get up and running with AppCompat and let you create some awesome, material apps.  Let me know in the comments/&lt;a href=&quot;https://plus.google.com/u/0/+ChrisBanes/posts/L4Y9TDndifL&quot;&gt;G+&lt;/a&gt;/&lt;a href=&quot;https://twitter.com/chrisbanes/status/523158184283078657&quot;&gt;Twitter&lt;/a&gt; if you’re having trouble with AppCompat or any of the support libraries, or where we could provide more documentation.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;faq&quot;&gt;FAQ&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Why is my EditText (or other widget listed above) not being tinted correctly on my pre-Lollipop device?&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The widget tinting in appcompat works by intercepting any layout inflation and inserting a special tint-aware version of the widget in its place. For most people this will work fine but I can think of a few scenarios where this won’t work including:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;You have your own custom version of the widget (i.e. you’ve extended EditText)&lt;/li&gt;
+  &lt;li&gt;You are creating the EditText without a LayoutInflater (i.e. calling new EditText()).&lt;/li&gt;
+  &lt;li&gt;You are hooking up to the &lt;a href=&quot;https://developer.android.com/reference/android/view/LayoutInflater.html&quot;&gt;LayoutInflater&lt;/a&gt;’s &lt;a href=&quot;https://developer.android.com/reference/android/view/LayoutInflater.Factory.html&quot;&gt;Factory&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The special tint aware widgets are currently hidden because they’re an unfinished implementation detail.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+
+</feed>
